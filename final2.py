@@ -3,7 +3,7 @@ import json
 import streamlit as st
 from groq import Groq
 
-from weather import get_weather, geocode_location
+from weather import get_weather, geocode_location, get_current_weather, describe_weather_code
 from rules2 import get_tomorrow_alert
 
 # -----------------------------
@@ -179,6 +179,29 @@ if weather_data and len(weather_data) >= 2:
 
     today = weather_data[0]
     tomorrow = weather_data[1]
+
+    # -----------------------------
+    # Current Conditions (real-time)
+    # -----------------------------
+    current = get_current_weather(lat, lon)
+
+    if current:
+        st.subheader("🌡 Current Conditions")
+
+        cc1, cc2, cc3, cc4 = st.columns(4)
+
+        with cc1:
+            st.metric("Temperature", f"{current['temperature']} °C")
+        with cc2:
+            st.metric("Humidity", f"{current['humidity']} %")
+        with cc3:
+            st.metric("Wind Speed", f"{current['wind_speed']} km/h")
+        with cc4:
+            st.metric("Conditions", describe_weather_code(current["weather_code"]))
+
+        st.caption(f"As of {current['time']} (local time)")
+
+        st.divider()
 
     # -----------------------------
     # Weather Section
