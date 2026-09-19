@@ -1,7 +1,9 @@
 import json
+from io import BytesIO
 
 import streamlit as st
 from groq import Groq
+from gtts import gTTS
 
 from weather import get_weather, geocode_location, get_current_weather, describe_weather_code
 from rules2 import get_tomorrow_alert
@@ -107,6 +109,36 @@ def translate_text(text, target_language):
 
     except Exception as e:
         return f"Translation failed: {e}"
+
+
+# gTTS language codes for each supported language
+LANGUAGE_CODES = {
+    "Tamil": "ta",
+    "Hindi": "hi",
+    "Telugu": "te",
+    "Malayalam": "ml",
+    "Kannada": "kn",
+    "English": "en",
+    "Bengali": "bn",
+    "Gujarati": "gu",
+    "Marathi": "mr",
+    "Punjabi": "pa",
+    "Urdu": "ur",
+}
+
+
+def text_to_speech(text, language_name):
+    """Converts text into spoken audio bytes using gTTS."""
+    lang_code = LANGUAGE_CODES.get(language_name, "en")
+    try:
+        tts = gTTS(text=text, lang=lang_code)
+        audio_buffer = BytesIO()
+        tts.write_to_fp(audio_buffer)
+        audio_buffer.seek(0)
+        return audio_buffer
+    except Exception as e:
+        st.warning(f"Voice generation failed: {e}")
+        return None
 
 
 # -----------------------------
@@ -304,13 +336,17 @@ if weather_data and len(weather_data) >= 2:
         st.divider()
         st.subheader("🌐 Translate Advisory")
 
-        languages = ["Tamil", "Hindi", "Telugu", "Malayalam", "Kannada", "English"]
+        languages = list(LANGUAGE_CODES.keys())
 
         selected_language = st.selectbox("Select Language", languages)
 
         if st.button("Translate Answer"):
             translated_text = translate_text(st.session_state.answer, selected_language)
             st.success(translated_text)
+
+            audio_buffer = text_to_speech(translated_text, selected_language)
+            if audio_buffer:
+                st.audio(audio_buffer, format="audio/mp3")
 
 else:
     st.error("Unable to fetch weather data.")
