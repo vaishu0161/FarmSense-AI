@@ -1,7 +1,6 @@
 import json
 
 import streamlit as st
-from deep_translator import GoogleTranslator
 from groq import Groq
 
 from weather import get_weather
@@ -80,6 +79,34 @@ def answer_question(question, crop, stage, weather, context, history):
 
     except Exception as e:
         return f"Groq Error: {e}"
+
+
+def translate_text(text, target_language):
+    """Translate text using Groq instead of a separate translation library."""
+    if client is None:
+        return "Groq API key not found. Please add GROQ_API_KEY to Streamlit Secrets."
+
+    prompt = f"""
+    Translate the following farming advisory into {target_language}.
+    Keep the meaning accurate and the tone practical for a farmer.
+    Return only the translated text, with no extra commentary.
+
+    Text to translate:
+    {text}
+    """
+
+    try:
+        response = client.chat.completions.create(
+            model="openai/gpt-oss-20b",
+            messages=[
+                {"role": "system", "content": "You are a precise translator for agricultural advisory text."},
+                {"role": "user", "content": prompt},
+            ],
+        )
+        return response.choices[0].message.content
+
+    except Exception as e:
+        return f"Translation failed: {e}"
 
 
 # -----------------------------
@@ -229,28 +256,13 @@ if weather_data and len(weather_data) >= 2:
         st.divider()
         st.subheader("🌐 Translate Advisory")
 
-        languages = {
-            "Tamil": "ta",
-            "Hindi": "hi",
-            "Telugu": "te",
-            "Malayalam": "ml",
-            "Kannada": "kn",
-            "English": "en"
-        }
+        languages = ["Tamil", "Hindi", "Telugu", "Malayalam", "Kannada", "English"]
 
-        selected_language = st.selectbox("Select Language", list(languages.keys()))
+        selected_language = st.selectbox("Select Language", languages)
 
         if st.button("Translate Answer"):
-            try:
-                translated_text = GoogleTranslator(
-                    source="auto",
-                    target=languages[selected_language]
-                ).translate(st.session_state.answer)
-
-                st.success(translated_text)
-
-            except Exception as e:
-                st.error(f"Translation failed: {e}")
+            translated_text = translate_text(st.session_state.answer, selected_language)
+            st.success(translated_text)
 
 else:
     st.error("Unable to fetch weather data.")
