@@ -1,4 +1,5 @@
 import json
+import re
 from io import BytesIO
 
 import streamlit as st
@@ -125,6 +126,25 @@ LANGUAGE_CODES = {
     "Punjabi": "pa",
     "Urdu": "ur",
 }
+
+
+def clean_for_speech(text):
+    """Strips markdown symbols and formatting so TTS doesn't read them aloud."""
+    if not text:
+        return text
+
+    # Remove markdown emphasis/heading/quote markers
+    text = re.sub(r'[*_`#>]+', '', text)
+    # Remove bullet points at the start of a line
+    text = re.sub(r'^\s*[-•]\s*', '', text, flags=re.MULTILINE)
+    # Remove numbered list markers like "1." at the start of a line
+    text = re.sub(r'^\s*\d+\.\s*', '', text, flags=re.MULTILINE)
+    # Drop bracket characters but keep their contents
+    text = re.sub(r'[\[\]{}()]', '', text)
+    # Collapse extra whitespace/newlines into single spaces
+    text = re.sub(r'\s+', ' ', text).strip()
+
+    return text
 
 
 def text_to_speech(text, language_name):
@@ -345,7 +365,8 @@ if weather_data and len(weather_data) >= 2:
             st.success(translated_text)
 
             with st.spinner("Generating voice..."):
-                audio_buffer = text_to_speech(translated_text, selected_language)
+                speech_text = clean_for_speech(translated_text)
+                audio_buffer = text_to_speech(speech_text, selected_language)
 
             if audio_buffer:
                 st.audio(audio_buffer, format="audio/mp3")
