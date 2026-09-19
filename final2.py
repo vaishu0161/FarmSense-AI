@@ -3,7 +3,7 @@ import json
 import streamlit as st
 from groq import Groq
 
-from weather import get_weather
+from weather import get_weather, geocode_location
 from rules2 import get_tomorrow_alert
 
 # -----------------------------
@@ -119,7 +119,33 @@ st.set_page_config(
 )
 
 st.title("🌾 Crop Advisory System")
-st.write("📍 Demo Location: Kumbakonam, Tamil Nadu")
+
+# -----------------------------
+# Location Input
+# -----------------------------
+st.subheader("📍 Your Location")
+
+if "location_name" not in st.session_state:
+    st.session_state.location_name = "Kumbakonam"
+    st.session_state.lat = 10.9601
+    st.session_state.lon = 79.3788
+
+location_input = st.text_input("Enter your city or town", value=st.session_state.location_name)
+
+if st.button("Set Location"):
+    geo = geocode_location(location_input)
+    if geo:
+        st.session_state.lat = geo["lat"]
+        st.session_state.lon = geo["lon"]
+        display_name = geo["name"]
+        if geo.get("admin1"):
+            display_name += f", {geo['admin1']}"
+        st.session_state.location_name = display_name
+        st.success(f"📍 Location set to: {st.session_state.location_name}")
+    else:
+        st.warning(f"Couldn't find '{location_input}'. Keeping previous location: {st.session_state.location_name}")
+else:
+    st.caption(f"Current location: {st.session_state.location_name}")
 
 # -----------------------------
 # Crop & Growth Stage Selection
@@ -143,9 +169,8 @@ growth_stage = st.selectbox(
 
 st.success(f"You selected: {crop} — {growth_stage} stage")
 
-# Location
-lat = 10.9601
-lon = 79.3788
+lat = st.session_state.lat
+lon = st.session_state.lon
 
 weather_data = get_weather(lat, lon)
 knowledge = load_knowledge()
