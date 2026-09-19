@@ -34,3 +34,30 @@ def get_weather(lat, lon):
         })
 
     return weather
+
+
+@st.cache_data(ttl=86400, show_spinner=False)
+def geocode_location(place_name):
+    """Convert a place name typed by the user into latitude/longitude."""
+    url = "https://geocoding-api.open-meteo.com/v1/search"
+    params = {"name": place_name, "count": 1, "language": "en", "format": "json"}
+
+    response = requests.get(url, params=params)
+
+    if response.status_code != 200:
+        return None
+
+    data = response.json()
+    results = data.get("results")
+
+    if not results:
+        return None
+
+    result = results[0]
+    return {
+        "lat": result["latitude"],
+        "lon": result["longitude"],
+        "name": result.get("name", place_name),
+        "admin1": result.get("admin1", ""),
+        "country": result.get("country", ""),
+    }
