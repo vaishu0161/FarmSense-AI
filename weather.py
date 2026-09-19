@@ -1,5 +1,8 @@
 import requests
+import streamlit as st
 
+
+@st.cache_data(ttl=1800, show_spinner=False)
 def get_weather(lat, lon):
 
     url = "https://api.open-meteo.com/v1/forecast"
