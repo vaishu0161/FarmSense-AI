@@ -1,0 +1,12 @@
+[
+  {"crop": "Paddy 🌾", "growth_stage": "Sowing", "common_risk": "Waterlogging from heavy early rain can rot seeds.", "recommended_action": "Ensure proper field drainage before sowing if rain is forecast."},
+  {"crop": "Paddy 🌾", "growth_stage": "Flowering", "common_risk": "High temperature during flowering reduces grain formation.", "recommended_action": "Maintain shallow standing water to regulate field temperature."},
+  {"crop": "Sugarcane 🎋", "growth_stage": "Vegetative", "common_risk": "Prolonged dry spells slow cane growth significantly.", "recommended_action": "Irrigate every 7-10 days if no rainfall; mulch to retain soil moisture."},
+  {"crop": "Cotton ☁️", "growth_stage": "Flowering", "common_risk": "Excess rainfall during flowering causes boll rot and flower drop.", "recommended_action": "Improve field drainage and avoid nitrogen-heavy fertilizer before expected rain."},
+  {"crop": "Tomato 🍅", "growth_stage": "Flowering", "common_risk": "High humidity after rain increases fungal disease risk.", "recommended_action": "Apply preventive fungicide and ensure good air circulation between plants."},
+  {"crop": "Groundnut 🥜", "growth_stage": "Sowing", "common_risk": "Poor germination in dry soil conditions.", "recommended_action": "Irrigate lightly before sowing if no rain is expected in the next 3 days."},
+  {"crop": "Maize 🌽", "growth_stage": "Vegetative", "common_risk": "Waterlogging stunts root development.", "recommended_action": "Ensure furrows drain excess water within 24 hours of heavy rain."},
+  {"crop": "General", "growth_stage": "Harvest", "common_risk": "Rain during harvest damages yield quality and delays drying.", "recommended_action": "Plan harvest around dry weather windows; cover harvested produce if rain is forecast."},
+  {"crop": "General", "growth_stage": "Sowing", "common_risk": "Uneven soil moisture causes patchy germination.", "recommended_action": "Check soil moisture at sowing depth before planting."},
+  {"crop": "General", "growth_stage": "Flowering", "common_risk": "Heat stress during flowering commonly reduces yield across most crops.", "recommended_action": "Irrigate during early morning or evening on high-temperature days."}
+]
