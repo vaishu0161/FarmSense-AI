@@ -137,7 +137,7 @@ def text_to_speech(text, language_name):
         audio_buffer.seek(0)
         return audio_buffer
     except Exception as e:
-        st.warning(f"Voice generation failed: {e}")
+        st.error(f"Voice generation failed ({type(e).__name__}): {e}")
         return None
 
 
@@ -344,7 +344,9 @@ if weather_data and len(weather_data) >= 2:
             translated_text = translate_text(st.session_state.answer, selected_language)
             st.success(translated_text)
 
-            audio_buffer = text_to_speech(translated_text, selected_language)
+            with st.spinner("Generating voice..."):
+                audio_buffer = text_to_speech(translated_text, selected_language)
+
             if audio_buffer:
                 st.audio(audio_buffer, format="audio/mp3")
 
