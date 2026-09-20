@@ -1,0 +1,95 @@
+# 🌾 FarmSense AI — Crop Advisory Chatbot
+
+An AI-powered, voice-enabled crop advisory chatbot that turns real-time weather
+data into practical, crop-specific farming advice — delivered in a farmer's
+own spoken language.
+
+Built for the **1M1B AI for Sustainability Virtual Internship** (with IBM
+SkillsBuild & AICTE).
+
+---
+
+## 🌍 Problem Statement
+
+Smallholder farmers often lack timely, localized guidance on how weather
+conditions should shape day-to-day decisions like irrigation, pest control,
+or harvesting. Generic forecasts aren't actionable advice, and English-only
+digital tools exclude farmers who aren't comfortable reading or typing in
+English. This project turns weather data into clear, spoken, crop-specific
+guidance — in the farmer's own language.
+
+**SDG Alignment:** Primary — SDG 2 (Zero Hunger); Secondary — SDG 13 (Climate
+Action)
+
+## 💡 Solution Overview
+
+Farmers select their crop and growth stage and enter their location. The app:
+
+1. Fetches **real-time and forecasted weather** for that location (Open-Meteo)
+2. Retrieves relevant crop-risk knowledge using a **RAG (Retrieval-Augmented
+   Generation)** layer
+3. Generates practical advice using a **Groq-hosted LLM**, grounded in the
+   weather data and retrieved knowledge
+4. Remembers the last few exchanges for natural follow-up questions
+5. **Translates** the advice into the farmer's chosen language and **speaks
+   it aloud** via text-to-speech
+
+## ✨ Features
+
+- 📍 Location search (any city/town, not fixed to one place)
+- 🌤 Live current conditions + 4-day forecast
+- 🌱 Crop and growth-stage selection for tailored advice
+- 📚 RAG-based crop knowledge retrieval
+- 💬 Conversational chatbot with short-term memory
+- 🌐 Translation into 11 languages (Tamil, Hindi, Telugu, Malayalam, Kannada,
+  English, Bengali, Gujarati, Marathi, Punjabi, Urdu)
+- 🔊 Voice output (text-to-speech) for translated advice
+- 👍👎 Feedback mechanism
+
+## 🛠 Technologies Used
+
+Python, Streamlit, Groq LLM, RAG, Open-Meteo Weather API, Open-Meteo
+Geocoding API, gTTS, GitHub, Streamlit Community Cloud
+
+## 👥 Target Users
+
+Smallholder and marginal farmers who need daily, weather-based guidance but
+face English-language or digital-literacy barriers. Secondary users include
+agricultural extension workers, students, and NGOs.
+
+## 🎯 Expected Impact
+
+Helps farmers reduce crop loss and water waste by turning weather data into
+timely, crop-specific advice — delivered in their own spoken language, making
+AI-driven guidance accessible even to farmers facing literacy or language
+barriers.
+
+## ⚖️ Responsible AI Considerations
+
+- **Fairness:** Advice logic isn't biased toward large-scale farming
+  practices; crop list covers common smallholder crops
+- **Transparency:** The chatbot is clearly an AI-generated advisory tool, not
+  a guarantee or substitute for expert agronomic advice
+- **Privacy:** No personal farmer data is collected or stored
+
+## 📁 Project Structure
+
+```
+├── final2.py            # Main Streamlit app
+├── weather.py           # Weather + geocoding (Open-Meteo)
+├── rules2.py            # Rule-based tomorrow's advisory alert
+├── crop_knowledge.json  # RAG knowledge base
+└── requirements.txt     # Dependencies
+```
+
+## 🚀 Setup & Deployment
+
+1. Clone this repo
+2. Add your Groq API key as a Streamlit secret named `GROQ_API_KEY`
+   (Settings → Secrets)
+3. Deploy on [Streamlit Community Cloud](https://share.streamlit.io) with
+   `final2.py` as the main file
+
+## 📄 License
+
+MIT
